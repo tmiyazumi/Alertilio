@@ -9,31 +9,31 @@ import * as Notifications from 'expo-notifications';
 
 // const warnings = ["Southwest Recreational Center", 29.6381706, -82.3692468];
 
-const warnings = ["Shands Hospital", 29.6389, -82.3422];
+//const warnings = ["Shands Hospital", 29.6389, -82.3422];
 
 export default function App() {
 
-  // state = {
-  //   data: {'latitude': 'Loading...' }
-  // }
+  state = {
+    data: {'latitude': 'Loading...' }
+  }
 
-  // getJsonData = () => {
-  //   fetch('https://tmiyazumi.github.io/ufalertjson/db.json', 
-  //   {method: 'GET').then((response) => response.json())
-  //   .then((responseJson) => {
-  //     console.log(responseJson);
-  //     this.setState({
-  //       data: responseJson
-  //     })
-  //   })
-  //   .catch((err) => {
-  //     console.error(error)
-  //   });
-  // }
+  getJsonData = () => {
+    fetch('https://tmiyazumi.github.io/ufalertjson/db.json', 
+    {method: 'GET').then((response) => response.json())
+    .then((responseJson) => {
+      console.log(responseJson);
+      this.setState({
+        data: responseJson
+      })
+    })
+    .catch((err) => {
+      console.error(error)
+    });
+  }
 
-  // componentDidMount = () => {
-  //   this.getJsonData()
-  // }
+  componentDidMount = () => {
+    this.getJsonData()
+  }
   
   let [text2, setText] = useState('');
   console.log('start app');
@@ -93,9 +93,7 @@ export default function App() {
             cancelable: true 
           }
         );
-        
       } 
-
     })();
   }, []);
 
@@ -131,10 +129,13 @@ export default function App() {
       >
       <Marker
         coordinate ={{latitude: warnings[1], longitude: warnings[2]}} //replace hard coded coordinates with variables
+        title = {warnings[0]}
         />
         <Circle 
         center={{latitude: warnings[1], longitude: warnings[2]}} //replace hard coded coordinates with variables
         radius={2500}
+        strokeColor = '#ff0000'
+        fillColor = '#ffcccb'
         />
       </MapView>
       <Image source = {{uri: "https://upload.wikimedia.org/wikipedia/en/thumb/1/14/Florida_Gators_gator_logo.svg/1200px-Florida_Gators_gator_logo.svg.png"}} style={{width: 305, height: 190, top: 130}}></Image>
@@ -155,6 +156,7 @@ const styles = StyleSheet.create({
     color: '#4467C4',
     textAlign: 'center',
     fontSize: 30,
-    fontWeight: 'bold',
+    fontWeight: 'bold'
   }
 });
+
