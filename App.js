@@ -22,31 +22,14 @@ async function fetch(setText) {
 
 export default function App() {
 
+  const warnings = ["Southwest Recreational Center", 29.6322, -82.337];
+
   let [text2, setText] = useState('');
   console.log('start app');
 
-
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-
-  const showAlert = () =>
-  Alert.alert(
-    'Alert Title',
-    'My Alert Msg',
-    [
-      {
-        text: 'Cancel',
-        onPress: () => Alert.alert('Cancel Pressed'),
-        style: 'cancel',
-      },
-    ],
-    {
-      cancelable: true,
-      onDismiss: () =>
-        Alert.alert('This alert was dismissed by tapping outside of the alert dialog.'),
-    }
-  );
-
+  
   useEffect(() => {
 
     (async () => {
@@ -72,6 +55,12 @@ export default function App() {
           locLon += text[i];
         }
       }
+
+      let distance1 = warnings[1] - locLat;
+      let distance2 = warnings[2] - locLon;
+    
+      // if ((distance1 < 0.009) && (distance2 < 0.009)){
+      
       let message = "Warning very near your area. Please stay indoors till area is cleared!" + locLat;
       if (locLat != "5"){
         Alert.alert(
@@ -85,11 +74,12 @@ export default function App() {
             cancelable: true 
           }
         );
-        
-      } 
+      }
+    //}
 
     })();
   }, []);
+  
 
   let text = 'Waiting..';
   if (errorMsg) {
@@ -118,7 +108,11 @@ export default function App() {
             latitudeDelta: 0.0922,
             longitudeDelta: 0.120,
         }}
-      /> 
+      >
+        <Marker
+        coordinate ={{latitude: locLat, longitude: locLon}}
+        />
+        </MapView>
     </View>
   );
 }
@@ -126,7 +120,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#fed8b1',
     alignItems: 'center',
     justifyContent: 'center',
   },
