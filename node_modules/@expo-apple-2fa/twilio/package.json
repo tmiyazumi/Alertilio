@@ -1,0 +1,26 @@
+{
+  "name": "@expo-apple-2fa/twilio",
+  "version": "0.0.0-alpha",
+  "description": "Send an SMS to your Android device with the URL of your ngrok tunnel for expo-apple-2fa",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rvcycle/2fa-twilio.git"
+  },
+  "keywords": [
+    "expo-apple-2fa"
+  ],
+  "author": "Jake Wood <jake@rvcoders.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/rvcycle/2fa-twilio/issues"
+  },
+  "homepage": "https://github.com/rvcycle/2fa-twilio#readme",
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "twilio": "^3.49.4"
+  }
+}
