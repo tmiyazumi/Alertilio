@@ -1,8 +1,8 @@
 import { StatusBar } from 'expo-status-bar';
-import { Alert, Platform, StyleSheet, Text, View, Button } from 'react-native';
+import { Alert, Platform, StyleSheet, Text, View, Button, Dimensions, Image } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import * as Location from 'expo-location';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import MapView, {PROVIDER_GOOGLE, Marker, Circle} from 'react-native-maps';
 import axios from 'axios';
 import { parseString } from 'xml2js';
 import * as Notifications from 'expo-notifications';
@@ -56,10 +56,10 @@ export default function App() {
         }
       }
 
-      let distance1 = warnings[1] - locLat;
-      let distance2 = warnings[2] - locLon;
+       let distance1 = warnings[1] - locLat;
+       let distance2 = warnings[2] - locLon;
     
-      // if ((distance1 < 0.009) && (distance2 < 0.009)){
+      //  if ((distance1 < 0.009) && (distance2 < 0.009)){
       
       let message = "Warning very near your area. Please stay indoors till area is cleared!" + locLat;
       if (locLat != "5"){
@@ -95,11 +95,14 @@ export default function App() {
       <Text style={styles.paragraph}>
          {text2 ? text2['feed']['$']['xml:base']: ''}
       </Text>
-      <Button title="Fetch" onPress={()=>fetch(setText)} />
-      <Text style={styles.paragraph}>{text}</Text>
-      <Text style={styles.paragraph}>locLat</Text>
+      <Text style={styles.title}>
+      {/* <Button title="Fetch" onPress={()=>fetch(setText)} />  */}
+      {/* <Text style={styles.paragraph}>{text}</Text>
+      <Text style={styles.paragraph}>locLat</Text> */}
+      {"Stay Safe Gators!"}
+      </Text>
       <MapView 
-        style={{height: '50%', width: '100%'}}
+        style={{height: '50%', width: '100%', top: 100}}
         provider={PROVIDER_GOOGLE} 
         showsUserLocation={true}
         initialRegion={{
@@ -110,10 +113,16 @@ export default function App() {
         }}
       >
         <Marker
-        coordinate ={{latitude: locLat, longitude: locLon}}
+        coordinate ={{latitude: 29.6332, longitude: -82.377}} //replace hard coded coordinates with variables
+        />
+        <Circle 
+        center={{latitude: 29.6332, longitude: -82.377}} //replace hard coded coordinates with variables
+        radius={1000}
         />
         </MapView>
+        <Image source = {{uri: "https://upload.wikimedia.org/wikipedia/en/thumb/1/14/Florida_Gators_gator_logo.svg/1200px-Florida_Gators_gator_logo.svg.png"}} style={{width: 305, height: 190, top: 130}}></Image> 
     </View>
+    //for the gator logo
   );
 }
 
@@ -122,7 +131,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fed8b1',
     alignItems: 'center',
-    justifyContent: 'center',
+    //justifyContent: 'center',
+  },
+  title: { //for the stay safe gators title
+    top: 80,
+    paddingVertical: 8,
+    color: '#4467C4',
+    textAlign: 'center',
+    fontSize: 30,
+    fontWeight: 'bold',
   },
 });
 
