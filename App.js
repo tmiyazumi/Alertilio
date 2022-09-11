@@ -7,29 +7,40 @@ import axios from 'axios';
 import { parseString } from 'xml2js';
 import * as Notifications from 'expo-notifications';
 
-// const url = "https://gist.github.com/tmiyazumi/2e5dbf20618572170fa139f8a02717d1.js";
+// const warnings = ["Southwest Recreational Center", 29.6381706, -82.3692468];
 
-
-
-async function fetch(setText) {
-  const response = await axios.get(url);
-  console.log('resp data', response.data)
-  parseString(response.data, function (err, result) {
-   setText(result)
-  console.log('console.log', result)
-  });        
-}
+const warnings = ["Shands Hospital", 29.6389, -82.3422];
 
 export default function App() {
 
-  const warnings = ["Southwest Recreational Center", 29.6322, -82.337];
+  // state = {
+  //   data: {'latitude': 'Loading...' }
+  // }
 
+  // getJsonData = () => {
+  //   fetch('https://tmiyazumi.github.io/ufalertjson/db.json', 
+  //   {method: 'GET').then((response) => response.json())
+  //   .then((responseJson) => {
+  //     console.log(responseJson);
+  //     this.setState({
+  //       data: responseJson
+  //     })
+  //   })
+  //   .catch((err) => {
+  //     console.error(error)
+  //   });
+  // }
+
+  // componentDidMount = () => {
+  //   this.getJsonData()
+  // }
+  
   let [text2, setText] = useState('');
   console.log('start app');
 
   const [location, setLocation] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  
+
   useEffect(() => {
 
     (async () => {
@@ -41,28 +52,36 @@ export default function App() {
 
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
+      console.log("Location: ", location.coords.latitude);
       let numCount = 1;
-      let locLat = "";
-      let locLon = "";
-      for (let i = 0; i < text.length; i++){
-        if (text[i] == '"'){
-          numCount++;
-        }
-        if (numCount == 9){
-          locLat += text[i];
-        }
-        if (numCount == 13){
-          locLon += text[i];
-        }
-      }
-
-       let distance1 = warnings[1] - locLat;
-       let distance2 = warnings[2] - locLon;
-    
-      //  if ((distance1 < 0.009) && (distance2 < 0.009)){
-      
-      let message = "Warning very near your area. Please stay indoors till area is cleared!" + locLat;
-      if (locLat != "5"){
+      let locLat = location.coords.latitude;
+      let locLon = location.coords.longitude;
+      // for (let i = 0; i < location.length; i++){
+      //   console.log("location: ", location[i]);
+      //   if (numCount == 12 && location[i] != ':' && location[i] != ',' && location[i] != '"'){
+      //     console.log("TEXT: ", location[i]);
+      //     locLat += location[i];
+      //   }
+      //   if (numCount == 13 &x& telocationxt[i] != ':' && location[i] != ',' && location[i] != '"'){
+      //     locLon += location[i];
+      //   }
+      //   if (location[i] == '"'){
+      //     numCount++;
+      //   }
+      // }
+      console.log("Latitude is: ", locLat);
+      console.log("Longitude is: ", locLon);
+      console.log("Latitude is: ", warnings[1]);
+      console.log("Longitude is: ", warnings[2]);
+      let lat2 = warnings[1] - locLat;
+      let lon2 = warnings[2] - locLon;
+      let p = 0.017453292519943295; // Pi/180
+      let c = Math.cos;
+      let a = 0.5 - c((warnings[1] - locLat) * p)/2 + c(locLat * p) * c(warnings[1] * p) * (1 - c((warnings[2] - locLon) * p))/2;
+      let distance = 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km in km
+      let message = "Warning very near your area. Please stay indoors till area is cleared! Location at " + warnings[0] + ".";
+      console.log("Distance", distance);
+      if (distance <= 2.5){
         Alert.alert(
           'WARNING', 
           'Warning very near your area. Please stay indoors till area is cleared!', 
@@ -74,12 +93,11 @@ export default function App() {
             cancelable: true 
           }
         );
-      }
-    //}
+        
+      } 
 
     })();
   }, []);
-  
 
   let text = 'Waiting..';
   if (errorMsg) {
@@ -93,12 +111,11 @@ export default function App() {
   return (
     <View style={styles.container}>
       <Text style={styles.paragraph}>
-         {text2 ? text2['feed']['$']['xml:base']: ''}
+         {/*text2 ? text2['feed']['$']['xml:base']: ''*/}
       </Text>
-      <Text style={styles.title}>
-      {/* <Button title="Fetch" onPress={()=>fetch(setText)} />  */}
-      {/* <Text style={styles.paragraph}>{text}</Text>
-      <Text style={styles.paragraph}>locLat</Text> */}
+      <Text style={styles.title}>              
+     {/* <Button title="Fetch" onPress={()=>fetch(setText)} />  */}
+      {/*<Text style={styles.paragraph}>{text}</Text> */}
       {"Stay Safe Gators!"}
       </Text>
       <MapView 
@@ -106,23 +123,22 @@ export default function App() {
         provider={PROVIDER_GOOGLE} 
         showsUserLocation={true}
         initialRegion={{
-            latitude: 29.6332,
-            longitude: -82.377,
+            latitude: 29.6436,
+            longitude: -82.3549,
             latitudeDelta: 0.0922,
             longitudeDelta: 0.120,
         }}
       >
-        <Marker
-        coordinate ={{latitude: 29.6332, longitude: -82.377}} //replace hard coded coordinates with variables
+      <Marker
+        coordinate ={{latitude: warnings[1], longitude: warnings[2]}} //replace hard coded coordinates with variables
         />
         <Circle 
-        center={{latitude: 29.6332, longitude: -82.377}} //replace hard coded coordinates with variables
-        radius={1000}
+        center={{latitude: warnings[1], longitude: warnings[2]}} //replace hard coded coordinates with variables
+        radius={2500}
         />
-        </MapView>
-        <Image source = {{uri: "https://upload.wikimedia.org/wikipedia/en/thumb/1/14/Florida_Gators_gator_logo.svg/1200px-Florida_Gators_gator_logo.svg.png"}} style={{width: 305, height: 190, top: 130}}></Image> 
+      </MapView>
+      <Image source = {{uri: "https://upload.wikimedia.org/wikipedia/en/thumb/1/14/Florida_Gators_gator_logo.svg/1200px-Florida_Gators_gator_logo.svg.png"}} style={{width: 305, height: 190, top: 130}}></Image>
     </View>
-    //for the gator logo
   );
 }
 
@@ -131,15 +147,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fed8b1',
     alignItems: 'center',
-    //justifyContent: 'center',
+    // justifyContent: 'center',
   },
-  title: { //for the stay safe gators title
+  title: {
     top: 80,
     paddingVertical: 8,
     color: '#4467C4',
     textAlign: 'center',
     fontSize: 30,
     fontWeight: 'bold',
-  },
+  }
 });
-
